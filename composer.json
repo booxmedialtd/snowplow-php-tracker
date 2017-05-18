@@ -12,15 +12,20 @@
     "support": {
         "email": "support@snowplowanalytics.com"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/booxmedialtd/Requests.git"
+        }
+    ],
     "require": {
-        "rmccue/requests": ">=1.0",
+        "rmccue/requests": "dev-master",
         "rhumsaa/uuid": "2.8.*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.5.*",
         "satooshi/php-coveralls": "dev-master"
     },
-    "homepage": "http://snowplowanalytics.com/",
     "autoload": {
         "psr-4": {
             "Snowplow\\Tracker\\": "src"
