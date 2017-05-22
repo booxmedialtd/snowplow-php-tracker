@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "rmccue/requests": "dev-master",
+        "rmccue/requests": "~1.7.1",
         "rhumsaa/uuid": "2.8.*"
     },
     "require-dev": {
