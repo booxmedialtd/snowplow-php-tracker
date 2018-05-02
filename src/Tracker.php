@@ -153,16 +153,7 @@ class Tracker extends Constants {
      */
     private function generateUuid()
     {
-        $uuidFeatureSet = new FeatureSet(
-            false,
-            false,
-            false,
-            true
-        );
-
-        $uuidFactory = new UuidFactory($uuidFeatureSet);
-
-        return $uuidFactory->uuid1()->toString();
+        return $this->getUuidFactory()->uuid1()->toString();
     }
 
     /**
@@ -375,5 +366,30 @@ class Tracker extends Constants {
      */
     public function returnStdNvPairs() {
         return $this->std_nv_pairs;
+    }
+
+    /**
+     * @var UuidFactory
+     */
+    private $uuidFactory;
+
+    /**
+     * @return UuidFactory
+     */
+    private function getUuidFactory()
+    {
+        if (null === $this->uuidFactory) {
+            $uuidFeatureSet = new FeatureSet(
+                false,
+                false,
+                false,
+                true
+            );
+
+            $this->uuidFactory = new UuidFactory($uuidFeatureSet);
+
+        }
+
+        return $this->uuidFactory;
     }
 }
