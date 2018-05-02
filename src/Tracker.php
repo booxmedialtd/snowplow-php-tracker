@@ -23,7 +23,8 @@
 
 namespace Snowplow\Tracker;
 
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\FeatureSet;
+use Ramsey\Uuid\UuidFactory;
 
 class Tracker extends Constants {
 
@@ -150,12 +151,9 @@ class Tracker extends Constants {
      *
      * @return string - Unique String based on the time of creation
      */
-    private function generateUuid() {
-        if (function_exists('uuid_create'))
-        {
-            return uuid_create(UUID_TYPE_TIME);
-        }
-        return Uuid::uuid1()->toString();
+    private function generateUuid()
+    {
+        return $this->getUuidFactory()->uuid1()->toString();
     }
 
     /**
@@ -368,5 +366,30 @@ class Tracker extends Constants {
      */
     public function returnStdNvPairs() {
         return $this->std_nv_pairs;
+    }
+
+    /**
+     * @var UuidFactory
+     */
+    private $uuidFactory;
+
+    /**
+     * @return UuidFactory
+     */
+    private function getUuidFactory()
+    {
+        if (null === $this->uuidFactory) {
+            $uuidFeatureSet = new FeatureSet(
+                false,
+                false,
+                false,
+                true
+            );
+
+            $this->uuidFactory = new UuidFactory($uuidFeatureSet);
+
+        }
+
+        return $this->uuidFactory;
     }
 }
