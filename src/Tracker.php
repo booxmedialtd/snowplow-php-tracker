@@ -23,7 +23,7 @@
 
 namespace Snowplow\Tracker;
 
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\Uuid;
 
 class Tracker extends Constants {
 
@@ -151,11 +151,6 @@ class Tracker extends Constants {
      * @return string - Unique String based on the time of creation
      */
     private function generateUuid() {
-        // commented out because const UUID_TYPE_TIME does not exist
-        /*if (function_exists('uuid_create'))
-        {
-            return uuid_create(UUID_TYPE_TIME);
-        }*/
         return @Uuid::uuid1()->toString();
     }
 
