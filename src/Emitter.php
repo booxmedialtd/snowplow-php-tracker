@@ -23,6 +23,7 @@
 
 namespace Snowplow\Tracker;
 use ErrorException;
+use RuntimeException;
 
 class Emitter extends Constants {
 
@@ -200,12 +201,13 @@ class Emitter extends Constants {
      * not exists already.
      *
      * @param string $dir - The directory we want to make
+     * @param bool   $isRecursive
      * @return bool|string - Boolean describing if the creation was a success
      */
-    public function makeDir($dir) {
+    public function makeDir($dir, $isRecursive = false) {
         try {
             if (!is_dir($dir)) {
-                mkdir($dir);
+                mkdir($dir, 0777, $isRecursive);
             }
             return true;
         } catch (ErrorException $e) {
@@ -241,16 +243,22 @@ class Emitter extends Constants {
         } catch (ErrorException $e) {
             return $e->getMessage();
         }
-    } 
+    }
 
     /**
      * Attempts to copy a file to a new directory
      *
      * @param string $path_from - The path to the file we want to copy
      * @param string $path_to - The path which we want to copt the file to
+     * @param bool   $createDirIfNotExists
+     *
      * @return bool|string - Whether or not the copy was a success
      */
-    public function copyFile($path_from, $path_to) {
+    public function copyFile($path_from, $path_to, $createDirIfNotExists = false)
+    {
+        if ($createDirIfNotExists) {
+            $this->makeDir(dirname($path_to), true);
+        }
         try {
             copy($path_from, $path_to);
             return true;
