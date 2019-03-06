@@ -7,7 +7,7 @@ use Throwable;
 
 final class CannotGetEventsFileException extends AbstractEventsFileFinderException
 {
-    private const MESSAGE = 'Cannot get events file:%s';
+    private const MESSAGE = 'Cannot get events file: %s';
 
     /**
      * @param Throwable $previous

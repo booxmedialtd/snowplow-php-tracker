@@ -62,36 +62,31 @@ class DeepFirstAccendingDateEventsFileFinder implements EventsFileFinderInterfac
             throw CannotOpenDirException::create($dir);
         }
 
-        $eventsFile = null;
-        foreach ($files as $file) {
-            if (is_dir($file)) {
-                /** @noinspection ReturnNullInspection */
-                $eventsFile = $this->getEventsFileFromDir(
-                    $file,
-                    $eventsFileNameIdentifier,
-                    false
-                );
-            }
-
-            /** @noinspection ReturnFalseInspection */
-            if (null === $eventsFile && $this->isEventsFile($file, $eventsFileNameIdentifier)) {
-                $eventsFile = $file;
-            }
-
-            if (null !== $eventsFile) {
-                break;
-            }
-        }
-
         if (!$isRootDir && count($files) === 0) {
             try {
                 $this->directoryCleaner->delete($dir);
             } catch (Throwable $e) {
                 throw CannotGetEventsFileException::create($e);
             }
+
+            return null;
         }
 
-        return $eventsFile;
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                /** @noinspection ReturnNullInspection */
+                $eventsFile = $this->getEventsFileFromDir($file, $eventsFileNameIdentifier, false);
+                if (null !== $eventsFile) {
+                    return $eventsFile;
+                }
+            }
+
+            if ($this->isEventsFile($file, $eventsFileNameIdentifier)) {
+                return $file;
+            }
+        }
+
+        return null;
     }
 
     /**

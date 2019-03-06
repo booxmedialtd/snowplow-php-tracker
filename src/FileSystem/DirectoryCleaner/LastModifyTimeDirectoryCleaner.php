@@ -41,12 +41,10 @@ class LastModifyTimeDirectoryCleaner implements DirectoryCleanerInterface
             );
         }
 
-        if ($dirModifiedTime < $this->getCurrentTime() - $this->deleteIfNotModifiedSeconds) {
-            $isSuccess = rmdir($dir);
-
-            if (false === $isSuccess) {
-                throw CannotDeleteDirectoryException::create($dir);
-            }
+        if (($dirModifiedTime < $this->getCurrentTime() - $this->deleteIfNotModifiedSeconds)
+            && false === rmdir($dir)
+        ) {
+            throw CannotDeleteDirectoryException::create($dir);
         }
     }
 

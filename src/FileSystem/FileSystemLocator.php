@@ -46,7 +46,7 @@ final class FileSystemLocator
     {
         if (null === $this->accendingDateEventsFileFinder) {
             $this->accendingDateEventsFileFinder = new DeepFirstAccendingDateEventsFileFinder(
-                $this->getDirectoryCleaner()
+                $this->createDirectoryCleaner()
             );
         }
         return $this->accendingDateEventsFileFinder;
@@ -65,7 +65,7 @@ final class FileSystemLocator
     /**
      * @return DirectoryCleanerInterface
      */
-    private function getDirectoryCleaner(): DirectoryCleanerInterface
+    private function createDirectoryCleaner(): DirectoryCleanerInterface
     {
         return new LastModifyTimeDirectoryCleaner(self::HOUR * 2);
     }

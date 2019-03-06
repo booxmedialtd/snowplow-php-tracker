@@ -207,9 +207,8 @@ class Emitter extends Constants {
     public function makeDir($dir, $isRecursive = false) {
         try {
             if (!is_dir($dir)) {
-                mkdir($dir, 0777, $isRecursive);
+                return mkdir($dir, 0777, $isRecursive);
             }
-            return true;
         } catch (ErrorException $e) {
             return $e->getMessage();
         }
@@ -256,12 +255,12 @@ class Emitter extends Constants {
      */
     public function copyFile($path_from, $path_to, $createDirIfNotExists = false)
     {
-        if ($createDirIfNotExists) {
-            $this->makeDir(dirname($path_to), true);
+        if ($createDirIfNotExists && false === $this->makeDir(dirname($path_to), true)) {
+            return false;
         }
+
         try {
-            copy($path_from, $path_to);
-            return true;
+            return copy($path_from, $path_to);
         } catch (ErrorException $e) {
             return $e->getMessage();
         }
