@@ -24,7 +24,7 @@ namespace Snowplow\Tracker\Emitters;
 use Snowplow\Tracker\Emitter;
 
 class FileEmitter extends Emitter {
-    
+
     // Emitter Parameters
 
     private $type;
@@ -34,7 +34,7 @@ class FileEmitter extends Emitter {
     private $fatal_error_occured = false;
 
     // Worker Parameters
-    
+
     private $worker = 0;
     private $worker_paths = array();
 

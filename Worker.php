@@ -20,6 +20,12 @@
     License: Apache License Version 2.0
 */
 
+require_once 'vendor/autoload.php';
+
+use Snowplow\Tracker\FileSystem\EventsFileFinder\Date\Exception\CannotGetEventsFileException;
+use Snowplow\Tracker\FileSystem\EventsFileFinder\Date\Exception\CannotOpenDirException;
+use Snowplow\Tracker\FileSystem\FileSystemLocator;
+
 // Parse Arguments from command line
 
 $args = parse($argv);
@@ -54,6 +60,8 @@ $timeout        = $args["timeout"];
 $buffer_size    = $args["buffer"];
 $rolling_window = $args["window"];
 
+$failedLogsDir = dirname($dir) . '/failed-logs/';
+
 // Worker Loop
 
 $loop = true;
@@ -67,7 +75,6 @@ while ($loop && $count < 5) {
         $count = 0;
 
         // Rename the events file
-        $path = $dir.$path;
         $path = renameEventsLog($path);
 
         // Consume and send events in the file
@@ -77,7 +84,7 @@ while ($loop && $count < 5) {
         // If any of the curls failed copy the log-file to the failed directory
         // Currently is set as an 'all or nothing' failure approach.
         if (!$ret) {
-            copy($path, dirname(dirname($path))."/failed-logs/failed-".rand().".log");
+            copy($path, $failedLogsDir . "failed-" . rand() . ".log");
         }
 
         // Delete the log-file
@@ -100,22 +107,17 @@ exit(0);
  * Get an events log from the workers folder
  *
  * @param string $dir
+ *
  * @return bool|string
+ * @throws CannotGetEventsFileException
+ * @throws CannotOpenDirException
  */
-function getEventsFile($dir) {
-    if (is_dir($dir)) {
-        if ($dh = opendir($dir)) {
-            while (($file = readdir($dh)) !== false) {
-                if (strpos($file,"events") !== false) {
-                    closedir($dh);
-                    return $file;
-                }
-            }
-            closedir($dh);
-            return false;
-        }
-    }
-    return false;
+function getEventsFile(string $dir) {
+    $eventsFile = FileSystemLocator::getInstance()
+        ->getAccendingDateEventsFileFinder()
+        ->getEventsFile($dir, 'events');
+
+    return $eventsFile ?? false;
 }
 
 /**
@@ -126,7 +128,7 @@ function getEventsFile($dir) {
  */
 function parse($argv){
     $ret = array();
-    for ($i = 0; $i < count($argv); ++$i) {
+    for ($i = 0, $iMax = count($argv); $i < $iMax; ++$i) {
         $arg = $argv[$i];
         if ('--' != substr($arg, 0, 2)) {
             continue;
