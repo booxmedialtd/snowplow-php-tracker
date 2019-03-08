@@ -204,11 +204,13 @@ class Emitter extends Constants {
      * @param bool   $isRecursive
      * @return bool|string - Boolean describing if the creation was a success
      */
-    public function makeDir($dir, $isRecursive = false) {
+    public function makeDir($dir, $isRecursive = false)
+    {
         try {
             if (!is_dir($dir)) {
                 return mkdir($dir, 0777, $isRecursive);
             }
+            return true;
         } catch (ErrorException $e) {
             return $e->getMessage();
         }
