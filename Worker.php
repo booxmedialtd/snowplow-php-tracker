@@ -20,7 +20,7 @@
     License: Apache License Version 2.0
 */
 
-require_once 'vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 use Snowplow\Tracker\FileSystem\EventsFileFinder\Date\Exception\CannotGetEventsFileException;
 use Snowplow\Tracker\FileSystem\EventsFileFinder\Date\Exception\CannotOpenDirException;
