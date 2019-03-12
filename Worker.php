@@ -20,15 +20,14 @@
     License: Apache License Version 2.0
 */
 
-require_once 'vendor/autoload.php';
-
 use Snowplow\Tracker\FileSystem\EventsFileFinder\Date\Exception\CannotGetEventsFileException;
 use Snowplow\Tracker\FileSystem\EventsFileFinder\Date\Exception\CannotOpenDirException;
 use Snowplow\Tracker\FileSystem\FileSystemLocator;
 
-// Parse Arguments from command line
-
-$args = parse($argv);
+if (null === $args) {
+    // Parse Arguments from command line
+    $args = parse($argv);
+}
 
 // Check that all of the parameters were set
 
@@ -96,10 +95,6 @@ while ($loop && $count < 5) {
         $count++;
     }
 }
-
-// Exit when there are no more files or time limit reached
-
-exit(0);
 
 //--- Functions ---//
 
